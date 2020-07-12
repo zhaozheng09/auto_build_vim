@@ -307,7 +307,7 @@ function install_libtool() {
     make && make install
 }
 
-if [ "$1" -eq "init" ]
+if [ "$1" == "init" ]
 then
     init
     install_python
