@@ -175,21 +175,22 @@ function install_lzma() {
     sh autogen.sh
     ./configure --prefix=$local/lzma
     make -j 32 && make install
+    yum install -y xz-devel
 }
 
 function install_ag() {
-    #install_m4
-    #install_autoconf
-    #install_automake
-    #install_pcre
-    #install_pkg
+    install_m4
+    install_autoconf
+    install_automake
+    install_pcre
+    install_pkg
     export PKG_CONFIG_PATH=$local/pcre/lib/pkgconfig/:$PKG_CONFIG_PATH
     export PKG_CONFIG_PATH=$local/lzma/lib/pkgconfig/:$PKG_CONFIG_PATH
     cd && cd software
-    #install_lzma
-    #rm -rf the_silver_searcher
+    install_lzma
+    rm -rf the_silver_searcher
     cd && cd software
-    #git clone https://github.com/ggreer/the_silver_searcher.git
+    git clone https://github.com/ggreer/the_silver_searcher.git
     cd the_silver_searcher
     sed -e 15a\\"AC_SEARCH_OPTS=\"-I $local/pkg/share/aclocal\"" autogen.sh > test.txt
     cp -rf test.txt autogen.sh
