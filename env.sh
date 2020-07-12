@@ -2,6 +2,8 @@
 
 #export HOME=/root
 
+export TERM=xterm-256color
+
 sw="$HOME/software"
 lc="$HOME/local"
 
