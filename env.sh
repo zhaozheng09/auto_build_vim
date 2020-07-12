@@ -20,14 +20,19 @@ export PATH="$lc/m4/bin/:$PATH"
 export PATH="$lc/automake/bin:$PATH"
 export PATH="$lc/autoconf/bin:$PATH"
 
-#export PATH="$lc/gcc74/bin:$PATH:$lc/gcc74/libexec"
-#export LD_LIBRARY_PATH="$lc/gcc74/lib64/:$lc/gcc74/lib/:$LD_LIBRARY_PATH"
+export PATH="$lc/gcc74/bin:$PATH:$lc/gcc74/libexec"
+export LD_LIBRARY_PATH="$lc/gcc74/lib64/:$lc/gcc74/lib/:$LD_LIBRARY_PATH"
 
 export PATH="$lc/make/bin:$PATH"
 echo $PATH
 
 export PATH="$lc/bison/bin:$PATH"
 export LD_LIBRARY_PATH="$lc/bison/lib:$LD_LIBRARY_PATH"
+
+export LD_LIBRARY_PATH="$lc/pcre/lib:$LD_LIBRARY_PATH"
+export LD_LIBRARY_PATH="$lc/lzma/lib:$LD_LIBRARY_PATH"
+export PATH="$lc/pcre/bin:$PATH"
+export PATH="$lc/ag/bin:$PATH"
 
 #export PATH="$lc/glibc/bin:$lc/glibc/libexec:$PATH"
 #export PATH="$lc/glibc/bin:$PATH"
