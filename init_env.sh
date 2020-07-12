@@ -37,6 +37,7 @@ software="$home/software"
 local="$home/local"
 
 function init() {
+    yum install xz
     rm /usr/bin/python
     ln -s /usr/bin/python2.6 /usr/bin/python
     cd
@@ -177,18 +178,21 @@ function install_lzma() {
 }
 
 function install_ag() {
-    install_m4
-    install_autoconf
-    install_automake
-    install_pcre
-    install_pkg
-    export PKG_CONFIG_PATH=/tmp/workspace/local/pcre/lib/pkgconfig/:$PKG_CONFIG_PATH
+    #install_m4
+    #install_autoconf
+    #install_automake
+    #install_pcre
+    #install_pkg
+    export PKG_CONFIG_PATH=$local/pcre/lib/pkgconfig/:$PKG_CONFIG_PATH
+    export PKG_CONFIG_PATH=$local/lzma/lib/pkgconfig/:$PKG_CONFIG_PATH
     cd && cd software
-    install_lzma
-    rm -rf the_silver_searcher
-    git clone https://github.com/ggreer/the_silver_searcher.git
+    #install_lzma
+    #rm -rf the_silver_searcher
+    cd && cd software
+    #git clone https://github.com/ggreer/the_silver_searcher.git
     cd the_silver_searcher
-    sed -e 15a\\"AC_SEARCH_OPTS=\"-I /tmp/workspace/local/pkg/share/aclocal\"" autogen.sh > autogen.sh
+    sed -e 15a\\"AC_SEARCH_OPTS=\"-I $local/pkg/share/aclocal\"" autogen.sh > test.txt
+    cp -rf test.txt autogen.sh
     sh autogen.sh
     ./configure --prefix=$local/ag
     make && make install
@@ -198,6 +202,7 @@ function install_m4() {
     cd && cd software
     rm m4-1.4.9.tar.gz
     wget $m4
+    check "download" "m4" $? 
     tar xf m4-1.4.9.tar.gz
     cd ~/software/m4-1.4.9
     ./configure --prefix=$local/m4
@@ -209,6 +214,7 @@ function install_autoconf() {
     cd && cd software
     rm autoconf-latest.tar.gz
     wget $autoconf
+    check "download" "autoconf" $? 
     tar xf autoconf-latest.tar.gz
     cd autoconf-2.69
     ./configure --prefix=$local/autoconf
@@ -218,7 +224,9 @@ function install_autoconf() {
 
 function install_automake() {
     cd && cd software
+    rm automake-1.16.2.tar.gz
     wget $automake
+    check "download" "automke" $? 
     tar xf automake-1.16.2.tar.gz
     cd automake-1.16.2
     ./configure --prefix=$local/automake
@@ -316,3 +324,9 @@ then
     install_vimrc
     install_ag
 fi
+
+#install_automake
+#install_lzma
+install_gcc74
+#install_ag
+
