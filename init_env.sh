@@ -307,12 +307,12 @@ function install_libtool() {
     make && make install
 }
 
-#init
-#install_glibc
-#install_vim
-#install_vimrc
-#install_a_vim
-install_ag
-#install_libtool
-#install_pkg
-#install_pcre
+if [ "$1" -eq "init" ]
+then
+    init
+    install_python
+    install_vim
+    install_a_vim
+    install_vimrc
+    install_ag
+fi
