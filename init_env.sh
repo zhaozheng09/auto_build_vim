@@ -36,13 +36,24 @@ home=`pwd`
 software="$home/software"
 local="$home/local"
 
+function install_pip() {
+mkdir ~/.pip
+echo "[global]
+timeout=10
+index-url=http://mirrors.aliyun.com/pypi/simple/
+extra-index-url=http://pypi.douban.com/simple/
+[install]
+trusted-host=mirrors.aliyun.com" > ~/.pip/pip.conf
+}
+
 function init() {
-    yum install xz
+    install_pip 
     rm /usr/bin/python
     ln -s /usr/bin/python2.6 /usr/bin/python
     cd
     mkdir software
     mkdir local
+    yum install xz
 }
 #------ install python
 function install_python() {
@@ -327,6 +338,7 @@ fi
 
 #install_automake
 #install_lzma
-install_gcc74
+#install_gcc74
+install_pip
 #install_ag
 
