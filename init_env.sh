@@ -23,6 +23,45 @@ pcre="ftp://ftp.pcre.org/pub/pcre/pcre-8.42.tar.bz2"
 pkg="https://pkg-config.freedesktop.org/releases/pkg-config-0.29.2.tar.gz"
 libtool="http://ftpmirror.gnu.org/libtool/libtool-2.4.6.tar.gz"
 
+
+function auto_get_download_name() {
+    echo ${1##*/}    
+}
+
+function download_wrapper() {
+    download_fin=1
+    retry=10
+    wait_costs_secs=600
+    echo 1 > /dev/shm/foo
+    filename=$(auto_get_download_name $1)
+
+    function real_download() {
+        wget $1
+        echo 0 > /dev/shm/foo
+    }
+
+    for i in {1..10}
+    do
+        real_download $1 &
+        id=$!
+        for i in {1..600}
+        do
+            sleep 1
+            download_fin=$(cat /dev/shm/foo)
+            echo "-------------$download_fin"
+            if [ $download_fin -eq 0 ]
+            then
+                echo "download $1 ok ."
+                download_fin=1
+                return 0
+            fi
+        done
+        echo "download timeout,retry $i."
+        kill -9 $!
+        rm $filename
+    done
+}
+
 function is_installed() {
     if [ ! -d "$1" ]
     then
@@ -71,7 +110,7 @@ function install_python() {
 
     cd && cd software
     rm Python-3.8.3.tgz
-    wget $dw_python
+    download_wrapper $dw_python
     check_ret "download" $name $?
 
     tar xzf Python-3.8.3.tgz
@@ -109,7 +148,7 @@ function install_vim() {
 
     cd && cd software
     rm vim-8.2.tar.bz2
-    wget $dw_vim
+    download_wrapper $dw_vim
     name="vim-8.2"
     check_ret "download" $name $?
     tar xf vim-8.2.tar.bz2
@@ -149,7 +188,7 @@ function install_ycm() {
     python3 install.py --clang-completer
 
     cd
-    wget $dw_ycm_config
+    download_wrapper $dw_ycm_config
     mv ycm_extra_conf.py .ycm_extra_conf.py
 
 }
@@ -157,7 +196,7 @@ function install_ycm() {
 #----------- install color
 function install_vimrc() {
     cd
-    wget $dw_rc
+    download_wrapper $dw_rc
     rm ~/.vimrc
     mv vimrc ~/.vimrc
     vim +BundleInstall +qall
@@ -168,7 +207,7 @@ function install_a_vim() {
     name="a.vim"
     cd && mkdir ~/.vim/plugin
     rm $name
-    wget $dw_a
+    download_wrapper $dw_a
     mv a.vim ~/.vim/plugin/
 }
 
@@ -181,7 +220,7 @@ function install_pcre() {
     fi
     cd && cd software
     rm pcre-8.42.tar.bz2
-    wget $pcre
+    download_wrapper $pcre
     tar xjf pcre-8.42.tar.bz2
     cd pcre-8.42
     ./configure --prefix=$local/$name
@@ -198,7 +237,7 @@ function install_pkg() {
     fi
     cd && cd software
     rm pkg-config-0.29.2.tar.gz
-    wget $pkg
+    download_wrapper $pkg
     tar xf pkg-config-0.29.2.tar.gz
     cd pkg-config-0.29.2
     ./configure --prefix=$local/$name
@@ -259,7 +298,7 @@ function install_m4() {
     fi
     cd && cd software
     rm m4-1.4.9.tar.gz
-    wget $m4
+    download_wrapper $m4
     check_ret "download" "m4" $? 
     tar xf m4-1.4.9.tar.gz
     cd ~/software/m4-1.4.9
@@ -277,7 +316,7 @@ function install_autoconf() {
     fi
     cd && cd software
     rm autoconf-latest.tar.gz
-    wget $autoconf
+    download_wrapper $autoconf
     check_ret "download" "autoconf" $? 
     tar xf autoconf-latest.tar.gz
     cd autoconf-2.69
@@ -295,7 +334,7 @@ function install_automake() {
     fi
     cd && cd software
     rm automake-1.16.2.tar.gz
-    wget $automake
+    download_wrapper $automake
     check_ret "download" "automke" $? 
     tar xf automake-1.16.2.tar.gz
     cd automake-1.16.2
@@ -320,11 +359,11 @@ function install_gcc74() {
     rm gcc-7.4.0.tar
     rm gcc-7.4.0
 
-    wget $gcc74
-    wget $mpfr
-    wget $mpc
-    wget $isl
-    wget $gmp
+    download_wrapper $gcc74
+    download_wrapper $mpfr
+    download_wrapper $mpc
+    download_wrapper $isl
+    download_wrapper $gmp
 
     xz -d gcc-7.4.0.tar.xz
     tar xf gcc-7.4.0.tar
@@ -355,7 +394,7 @@ function install_glibc() {
 
     cd && cd software
     rm glibc-2.19.tar.bz2
-    wget $glibc
+    download_wrapper $glibc
     tar xjf glibc-2.19.tar.bz2
     cd glibc-2.19
     mkdir build
@@ -374,7 +413,7 @@ function install_make() {
     fi
     cd && cd software
     rm make-4.3.tar.gz
-    wget $make
+    download_wrapper $make
     tar xzf make-4.3.tar.gz
     cd make-4.3
     ./configure --prefix=$local/$name
@@ -391,7 +430,7 @@ function install_bison() {
     fi
     cd && cd software
     rm bison-3.6.tar.xz
-    wget $bison
+    download_wrapper $bison
     xz -d bison-3.6.tar.xz
     tar xf bison-3.6.tar
     cd bison-3.6
@@ -408,7 +447,7 @@ function install_libtool() {
     fi
     cd && cd software
     rm libtool-2.4.6.tar.gz
-    wget $libtool
+    download_wrapper $libtool
     tar xf libtool-2.4.6.tar.gz
     cd libtool-2.4.6
     sh autogen.sh
