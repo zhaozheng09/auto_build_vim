@@ -22,7 +22,22 @@ bison="https://ftp.gnu.org/gnu/bison/bison-3.6.tar.xz"
 pcre="ftp://ftp.pcre.org/pub/pcre/pcre-8.42.tar.bz2"
 pkg="https://pkg-config.freedesktop.org/releases/pkg-config-0.29.2.tar.gz"
 libtool="http://ftpmirror.gnu.org/libtool/libtool-2.4.6.tar.gz"
-function check() {
+
+function is_installed() {
+    if [ ! -d "$1" ]
+    then
+        return 1
+    fi
+    if [ "`ls -A $1`" = "" ]
+    then
+        return 1
+    else
+        echo "$1 has been installed ."
+        return 0
+    fi
+}
+
+function check_ret() {
     if [ $3 -ne 0 ]
     then
         echo "------------------------"
@@ -46,25 +61,28 @@ function init() {
 }
 #------ install python
 function install_python() {
+    name="python3.8.3"
+    python_local="$local/$name"
+    ret=${`is_installed $python_local`}
+    if [ $? -eq 0 ]
+    then    
+        return 0
+    fi
+
     cd && cd software
     rm Python-3.8.3.tgz
     wget $dw_python
-    name="python3.8.3"
-    check "download" $name $?
+    check_ret "download" $name $?
 
     tar xzf Python-3.8.3.tgz
     cd Python-3.8.3
-    python_local="$local/$name"
     mkdir $python_local
-    echo "-----"
-    echo $python_local
-    echo "-----"
     ./configure --prefix=$python_local --enable-shared --enable-optimizations
-    check "config" $name $?
+    check_ret "config" $name $?
     make -j 32
-    check "make" $name $?
+    check_ret "make" $name $?
     make install
-    check "install" $name $?
+    check_ret "install" $name $?
 
     bin="$python_local/bin"
     lib="$python_local/lib64:$python_local/lib"
@@ -76,19 +94,26 @@ function install_python() {
 
 # -------- install vim
 function install_vim() {
+    name="vim-8.2"
+    vim_local="$local/$name"
+    ret=${`is_install $vim_local`}
+    if [ $? -eq 0 ]
+    then
+        return 0
+    fi
+
     name="ncurses"
     yum install -y ncurses-devel.x86_64
     yum install -y bzip2
-    check "download" $name $?
+    check_ret "download" $name $?
 
-    name="vim-8.2"
     cd && cd software
     rm vim-8.2.tar.bz2
     wget $dw_vim
-    check "download" $name $?
+    name="vim-8.2"
+    check_ret "download" $name $?
     tar xf vim-8.2.tar.bz2
     cd vim82
-    vim_local="$local/$name"
     mkdir $vim_local
     echo $vim_local
     ./configure --prefix=$vim_local --enable-python3interp=dynamic
@@ -148,37 +173,63 @@ function install_a_vim() {
 }
 
 function install_pcre() {
+    name=pcre
+    is_installed "$local/$name"
+    if [ $? -eq 0 ]
+    then
+        return 
+    fi
     cd && cd software
     rm pcre-8.42.tar.bz2
     wget $pcre
     tar xjf pcre-8.42.tar.bz2
     cd pcre-8.42
-    ./configure --prefix=$local/pcre
+    ./configure --prefix=$local/$name
     make && make install
 
 }
 
 function install_pkg() {
+    name="pkg"
+    is_installed "$local/$name"
+    if [ $? -eq 0 ]
+    then
+        return 
+    fi
     cd && cd software
     rm pkg-config-0.29.2.tar.gz
     wget $pkg
     tar xf pkg-config-0.29.2.tar.gz
     cd pkg-config-0.29.2
-    ./configure --prefix=$local/pkg
+    ./configure --prefix=$local/$name
     make && make install
 }
 
 function install_lzma() {
+    name="lzma"
+    is_installed "$local/$name"
+    if [ $? -eq 0 ]
+    then
+        return
+    fi
+
     cd && cd software
     git clone https://github.com/kobolabs/liblzma.git
     cd liblzma
     sh autogen.sh
-    ./configure --prefix=$local/lzma
+    ./configure --prefix=$local/$name
     make -j 32 && make install
     yum install -y xz-devel
 }
 
 function install_ag() {
+    name="ag"
+    is_installed "$local/$name"
+    if [ $? -eq 0 ]
+    then
+        return
+    fi
+
     install_m4
     install_autoconf
     install_automake
@@ -195,47 +246,71 @@ function install_ag() {
     sed -e 15a\\"AC_SEARCH_OPTS=\"-I $local/pkg/share/aclocal\"" autogen.sh > test.txt
     cp -rf test.txt autogen.sh
     sh autogen.sh
-    ./configure --prefix=$local/ag
+    ./configure --prefix=$local/$name
     make && make install
 }
 
 function install_m4() {
+    name="m4"
+    is_installed "$local/$name"
+    if [ $? -eq 0 ]
+    then
+        return
+    fi
     cd && cd software
     rm m4-1.4.9.tar.gz
     wget $m4
-    check "download" "m4" $? 
+    check_ret "download" "m4" $? 
     tar xf m4-1.4.9.tar.gz
     cd ~/software/m4-1.4.9
-    ./configure --prefix=$local/m4
+    ./configure --prefix=$local/$name
     make && make install
     export PATH=$local/m4:$PATH
 }
 
 function install_autoconf() {
+    name="autoconf"
+    is_installed "$local/$name"
+    if [ $? -eq 0 ]
+    then
+        return
+    fi
     cd && cd software
     rm autoconf-latest.tar.gz
     wget $autoconf
-    check "download" "autoconf" $? 
+    check_ret "download" "autoconf" $? 
     tar xf autoconf-latest.tar.gz
     cd autoconf-2.69
-    ./configure --prefix=$local/autoconf
+    ./configure --prefix=$local/$name
     make && make install
     export PATH=$local/autoconf:$PATH
 }
 
 function install_automake() {
+    name="automake"
+    is_installed "$local/$name"
+    if [ $? -eq 0 ]
+    then
+        return
+    fi
     cd && cd software
     rm automake-1.16.2.tar.gz
     wget $automake
-    check "download" "automke" $? 
+    check_ret "download" "automke" $? 
     tar xf automake-1.16.2.tar.gz
     cd automake-1.16.2
-    ./configure --prefix=$local/automake
+    ./configure --prefix=$local/$name
     make && make install
     export PATH=$local/automake:$PATH
 }
 
 function install_gcc74() {
+    name="gcc74"
+    is_installed "$local/$name"
+    if [ $? -eq 0 ]
+    then
+        return
+    fi
     cd && cd software
     rm gcc-7.4.0.tar.xz
     rm gmp-6.1.0.tar.bz2
@@ -265,12 +340,19 @@ function install_gcc74() {
     cd gcc-7.4.0
     mkdir build
     cd build
-    ../configure --prefix=$local/gcc74 -disable-multilib
+    ../configure --prefix=$local/$name -disable-multilib
     make -j 48 && make install
 
 }
 
 function install_glibc() {
+    name="glibc"
+    is_installed "$local/$name"
+    if [ $? -eq 0 ]
+    then
+        return
+    fi
+
     cd && cd software
     rm glibc-2.19.tar.bz2
     wget $glibc
@@ -278,41 +360,59 @@ function install_glibc() {
     cd glibc-2.19
     mkdir build
     cd build
-    ../configure --prefix=$local/glibc
+    ../configure --prefix=$local/$name
     make -j 48
     make install
 }
 
 function install_make() {
+    name="make"
+    is_installed "$local/$name"
+    if [ $? -eq 0 ]
+    then
+        return
+    fi
     cd && cd software
     rm make-4.3.tar.gz
     wget $make
     tar xzf make-4.3.tar.gz
     cd make-4.3
-    ./configure --prefix=$local/make
+    ./configure --prefix=$local/$name
     make -j 32 && make install
 
 }
 
 function install_bison() {
+    name="bison"
+    is_installed "$local/$name"
+    if [ $? -eq 0 ]
+    then
+        return
+    fi
     cd && cd software
     rm bison-3.6.tar.xz
     wget $bison
     xz -d bison-3.6.tar.xz
     tar xf bison-3.6.tar
     cd bison-3.6
-    ./configure --prefix=$local/bison
+    ./configure --prefix=$local/$name
     make -j 32 && make install
 }
 
 function install_libtool() {
+    name="libtool"
+    is_installed "$local/$name"
+    if [ $? -eq 0 ]
+    then
+        return
+    fi
     cd && cd software
-    #rm libtool-2.4.6.tar.gz
-    #wget $libtool
-    #tar xf libtool-2.4.6.tar.gz
+    rm libtool-2.4.6.tar.gz
+    wget $libtool
+    tar xf libtool-2.4.6.tar.gz
     cd libtool-2.4.6
-    #sh autogen.sh
-    #./configure --prefix=$local/libtool
+    sh autogen.sh
+    ./configure --prefix=$local/$name
     make && make install
 }
 
@@ -328,6 +428,6 @@ fi
 
 #install_automake
 #install_lzma
-install_gcc74
-#install_ag
+#install_gcc74
+install_ag
 
