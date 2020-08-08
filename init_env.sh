@@ -86,7 +86,7 @@ function check_ret() {
     fi
 }
 
-home=`pwd`
+home=$HOME
 software="$home/software"
 local="$home/local"
 
@@ -102,7 +102,7 @@ function init() {
 function install_python() {
     name="python3.8.3"
     python_local="$local/$name"
-    ret=${`is_installed $python_local`}
+    is_installed $python_local
     if [ $? -eq 0 ]
     then    
         return 0
@@ -463,10 +463,14 @@ then
     install_a_vim
     install_vimrc
     install_ag
+    install_python
 fi
 
+#install_ag
+#install_python
 #install_automake
 #install_lzma
+#install_glibc
+#install_glibc
 #install_gcc74
-install_ag
 
