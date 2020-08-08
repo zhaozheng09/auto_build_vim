@@ -135,7 +135,7 @@ function install_python() {
 function install_vim() {
     name="vim-8.2"
     vim_local="$local/$name"
-    ret=${`is_install $vim_local`}
+    is_install $vim_local
     if [ $? -eq 0 ]
     then
         return 0
@@ -460,10 +460,10 @@ then
     init
     install_python
     install_vim
-    install_a_vim
-    install_vimrc
-    install_ag
-    install_python
+    #install_a_vim
+    #install_vimrc
+    #install_ag
+    #install_python
 fi
 
 #install_ag
