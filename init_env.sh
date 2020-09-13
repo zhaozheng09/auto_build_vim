@@ -23,6 +23,13 @@ pcre="ftp://ftp.pcre.org/pub/pcre/pcre-8.42.tar.bz2"
 pkg="https://pkg-config.freedesktop.org/releases/pkg-config-0.29.2.tar.gz"
 libtool="http://ftpmirror.gnu.org/libtool/libtool-2.4.6.tar.gz"
 
+export unexpected_quit=0
+
+trap 'onCtrlC' INT
+function onCtrlC () {
+    echo 'Ctrl+C is captured'
+    export unexpected_quit=1
+}
 
 function auto_get_download_name() {
     echo ${1##*/}    
@@ -48,12 +55,17 @@ function download_wrapper() {
         do
             sleep 1
             download_fin=$(cat /dev/shm/foo)
-            echo "-------------$download_fin"
+            echo "current download $i, max 600..."
             if [ $download_fin -eq 0 ]
             then
                 echo "download $1 ok ."
                 download_fin=1
                 return 0
+            fi
+            if [ $unexpected_quit -eq 1 ]:
+            then
+                echo "unexpected quit ."
+                return -1
             fi
         done
         echo "download timeout,retry $i."
@@ -460,11 +472,15 @@ then
     init
     install_python
     install_vim
-    #install_a_vim
-    #install_vimrc
+    install_a_vim
+    install_vimrc
     #install_ag
     #install_python
 fi
+
+install_a_vim
+install_vimrc
+
 
 #install_ag
 #install_python
