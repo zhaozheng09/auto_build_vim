@@ -7,10 +7,9 @@ dw_vim="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaoz
 dw_rc="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/vimrc"
 dw_ycm_config="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/ycm_extra_conf.py"
 dw_a="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/a.vim"
-pcre="http://mirror.centos.org/centos/7/os/x86_64/Packages/pcre-devel-8.32-17.el7.x86_64.rpm"
-automake="https://ftp.gnu.org/gnu/automake/automake-1.16.2.tar.gz"
-autoconf="ftp://ftp.gnu.org/gnu/autoconf/autoconf-latest.tar.gz"
-m4="http://ftp.gnu.org/gnu/m4/m4-1.4.9.tar.gz"
+#automake="https://ftp.gnu.org/gnu/automake/automake-1.16.2.tar.gz"
+#autoconf="ftp://ftp.gnu.org/gnu/autoconf/autoconf-latest.tar.gz"
+#m4="http://ftp.gnu.org/gnu/m4/m4-1.4.9.tar.gz"
 gcc74="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/gcc-7.4.0.tar.xz"
 gmp="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/gmp-6.1.0.tar.bz2"
 isl="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/isl-0.16.1.tar.bz2"
@@ -19,9 +18,15 @@ mpfr="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozhe
 glibc="https://ftp.gnu.org/gnu/glibc/glibc-2.19.tar.bz2"
 make="https://ftp.gnu.org/gnu/make/make-4.3.tar.gz"
 bison="https://ftp.gnu.org/gnu/bison/bison-3.6.tar.xz"
-pcre="ftp://ftp.pcre.org/pub/pcre/pcre-8.42.tar.bz2"
-pkg="https://pkg-config.freedesktop.org/releases/pkg-config-0.29.2.tar.gz"
+#pcre="ftp://ftp.pcre.org/pub/pcre/pcre-8.42.tar.bz2"
+#pkg="https://pkg-config.freedesktop.org/releases/pkg-config-0.29.2.tar.gz"
 libtool="http://ftpmirror.gnu.org/libtool/libtool-2.4.6.tar.gz"
+
+automake="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/automake-1.16.2.tar.gz"
+autoconf="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/autoconf-latest.tar.gz"
+m4="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/m4-1.4.9.tar.gz"
+pcre="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/pcre-8.42.tar.bz2"
+pkg="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/pkg-config-0.29.2.tar.gz"
 
 export unexpected_quit=0
 
