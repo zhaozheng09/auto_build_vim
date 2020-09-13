@@ -44,7 +44,9 @@ function download_wrapper() {
 
     function real_download() {
         wget $1
-        echo 0 > /dev/shm/foo
+        ret=$?
+        echo "download return val: $ret"
+        echo $ret > /dev/shm/foo
     }
 
     for i in {1..10}
@@ -61,11 +63,18 @@ function download_wrapper() {
                 echo "download $1 ok ."
                 download_fin=1
                 return 0
+            elif [ $download_fin -ne 1 ]
+            then
+                echo "download error ."
+                download_fin=1
+                return 1
             fi
             if [ $unexpected_quit -eq 1 ]
             then
+                kill -9 $id
+                rm $filename
                 echo "unexpected quit ."
-                return -1
+                return 1
             fi
         done
         echo "download timeout,retry $i."
@@ -252,7 +261,7 @@ function install_pkg() {
     download_wrapper $pkg
     tar xf pkg-config-0.29.2.tar.gz
     cd pkg-config-0.29.2
-    ./configure --prefix=$local/$name
+    ./configure --prefix=$local/$name ----with-internal-glib=$local/glibc
     make && make install
 }
 
@@ -478,11 +487,18 @@ then
     #install_python
 fi
 
+#install_m4
+#install_autoconf
+#install_automake
+#install_pcre
+install_pkg
+
+
 #install_ag
 #install_python
 #install_automake
 #install_lzma
-install_glibc
+#install_glibc
 #install_glibc
 #install_gcc74
 
