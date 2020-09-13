@@ -496,7 +496,7 @@ fi
 #install_autoconf
 #install_automake
 #install_pcre
-install_pkg
+#install_pkg
 
 
 #install_ag
@@ -504,6 +504,6 @@ install_pkg
 #install_automake
 #install_lzma
 #install_glibc
-#install_glibc
+install_glibc
 #install_gcc74
 
