@@ -19,14 +19,14 @@ glibc="https://ftp.gnu.org/gnu/glibc/glibc-2.19.tar.bz2"
 make="https://ftp.gnu.org/gnu/make/make-4.3.tar.gz"
 bison="https://ftp.gnu.org/gnu/bison/bison-3.6.tar.xz"
 #pcre="ftp://ftp.pcre.org/pub/pcre/pcre-8.42.tar.bz2"
-#pkg="https://pkg-config.freedesktop.org/releases/pkg-config-0.29.2.tar.gz"
+pkg="https://pkg-config.freedesktop.org/releases/pkg-config-0.29.2.tar.gz"
 libtool="http://ftpmirror.gnu.org/libtool/libtool-2.4.6.tar.gz"
 
 automake="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/automake-1.16.2.tar.gz"
 autoconf="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/autoconf-latest.tar.gz"
 m4="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/m4-1.4.9.tar.gz"
 pcre="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/pcre-8.42.tar.bz2"
-pkg="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/pkg-config-0.29.2.tar.gz"
+#pkg="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/pkg-config-0.29.2.tar.gz"
 
 export unexpected_quit=0
 
@@ -266,7 +266,7 @@ function install_pkg() {
     download_wrapper $pkg
     tar xf pkg-config-0.29.2.tar.gz
     cd pkg-config-0.29.2
-    ./configure --prefix=$local/$name ----with-internal-glib=$local/glibc
+    ./configure --prefix=$local/$name --with-internal-glib=$local/glibc
     make && make install
 }
 
@@ -295,11 +295,11 @@ function install_ag() {
         return
     fi
 
-    install_m4
-    install_autoconf
-    install_automake
-    install_pcre
-    install_pkg
+    #install_m4
+    #install_autoconf
+    #install_automake
+    #install_pcre
+    #install_pkg
     export PKG_CONFIG_PATH=$local/pcre/lib/pkgconfig/:$PKG_CONFIG_PATH
     export PKG_CONFIG_PATH=$local/lzma/lib/pkgconfig/:$PKG_CONFIG_PATH
     cd && cd software
@@ -499,11 +499,11 @@ fi
 #install_pkg
 
 
-#install_ag
+install_ag
 #install_python
 #install_automake
 #install_lzma
 #install_glibc
-install_glibc
+#install_glibc
 #install_gcc74
 
