@@ -62,7 +62,7 @@ function download_wrapper() {
                 download_fin=1
                 return 0
             fi
-            if [ $unexpected_quit -eq 1 ]:
+            if [ $unexpected_quit -eq 1 ]
             then
                 echo "unexpected quit ."
                 return -1
@@ -478,15 +478,11 @@ then
     #install_python
 fi
 
-install_a_vim
-install_vimrc
-
-
 #install_ag
 #install_python
 #install_automake
 #install_lzma
-#install_glibc
+install_glibc
 #install_glibc
 #install_gcc74
 
