@@ -467,7 +467,7 @@ then
     install_vim
     install_a_vim
     install_vimrc
-    #install_ag
+    install_ag
     #install_python
 fi
 
@@ -478,7 +478,6 @@ fi
 #install_pkg
 
 
-install_ag
 #install_python
 #install_automake
 #install_lzma
