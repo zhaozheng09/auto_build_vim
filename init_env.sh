@@ -1,33 +1,7 @@
 #!/bin/bash
 
 source ~/env.sh
-
-dw_python="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/python3.8.3/Python-3.8.3.tgz"
-dw_vim="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/vim-8.2/vim-8.2.tar.bz2"
-dw_rc="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/vimrc"
-dw_ycm_config="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/ycm_extra_conf.py"
-dw_a="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/a.vim"
-#automake="https://ftp.gnu.org/gnu/automake/automake-1.16.2.tar.gz"
-#autoconf="ftp://ftp.gnu.org/gnu/autoconf/autoconf-latest.tar.gz"
-#m4="http://ftp.gnu.org/gnu/m4/m4-1.4.9.tar.gz"
-gcc74="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/gcc-7.4.0.tar.xz"
-gmp="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/gmp-6.1.0.tar.bz2"
-isl="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/isl-0.16.1.tar.bz2"
-mpc="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/mpc-1.0.3.tar.gz"
-mpfr="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/mpfr-3.1.4.tar.bz2"
-glibc="https://ftp.gnu.org/gnu/glibc/glibc-2.19.tar.bz2"
-make="https://ftp.gnu.org/gnu/make/make-4.3.tar.gz"
-bison="https://ftp.gnu.org/gnu/bison/bison-3.6.tar.xz"
-#pcre="ftp://ftp.pcre.org/pub/pcre/pcre-8.42.tar.bz2"
-pkg="https://pkg-config.freedesktop.org/releases/pkg-config-0.29.2.tar.gz"
-libtool="http://ftpmirror.gnu.org/libtool/libtool-2.4.6.tar.gz"
-
-automake="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/automake-1.16.2.tar.gz"
-autoconf="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/autoconf-latest.tar.gz"
-m4="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/m4-1.4.9.tar.gz"
-pcre="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/pcre-8.42.tar.bz2"
-#pkg="https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/pkg-config-0.29.2.tar.gz"
-
+source ./get_source.sh
 export unexpected_quit=0
 
 trap 'onCtrlC' INT
@@ -103,7 +77,7 @@ function init() {
 }
 #------ install python
 function install_python() {
-    name="python3.8.3"
+    name="Python-3.8.3"
     python_local="$local/$name"
     is_installed $python_local
     if [ $? -eq 0 ]
@@ -113,7 +87,8 @@ function install_python() {
 
     cd && cd software
     rm Python-3.8.3.tgz
-    download_wrapper $dw_python
+    get_source $name
+    download_wrapper $source_addr
     check_ret "download" $name $?
 
     tar xzf Python-3.8.3.tgz
@@ -151,7 +126,8 @@ function install_vim() {
 
     cd && cd software
     rm vim-8.2.tar.bz2
-    download_wrapper $dw_vim
+    get_source $name
+    download_wrapper $source_addr
     name="vim-8.2"
     check_ret "download" $name $?
     tar xf vim-8.2.tar.bz2
@@ -174,6 +150,7 @@ function install_vim() {
 
 # -------- install ycm
 function install_ycm() {
+    name='ycm_config'
     git clone https://github.com/Valloric/YouCompleteMe.git ~/.vim/bundle/YouCompleteMe
     cd ~/.vim/bundle/YouCompleteMe
     git submodule update --init --recursive
@@ -191,15 +168,18 @@ function install_ycm() {
     python3 install.py --clang-completer
 
     cd
-    download_wrapper $dw_ycm_config
+    get_source $name
+    download_wrapper $source_addr
     mv ycm_extra_conf.py .ycm_extra_conf.py
 
 }
 
 #----------- install color
 function install_vimrc() {
+    name='vimrc'
     cd
-    download_wrapper $dw_rc
+    get_source $name
+    download_wrapper $source_addr
     rm ~/.vimrc
     mv vimrc ~/.vimrc
     vim +BundleInstall +qall
@@ -207,15 +187,16 @@ function install_vimrc() {
 
 #--------- install a.vim
 function install_a_vim() {
-    name="a.vim"
+    name='a.vim'
     cd && mkdir ~/.vim/plugin
     rm $name
-    download_wrapper $dw_a
+    get_source $name
+    download_wrapper $source_addr
     mv a.vim ~/.vim/plugin/
 }
 
 function install_pcre() {
-    name=pcre
+    name='pcre-8.42'
     is_installed "$local/$name"
     if [ $? -eq 0 ]
     then
@@ -223,7 +204,8 @@ function install_pcre() {
     fi
     cd && cd software
     rm pcre-8.42.tar.bz2
-    download_wrapper $pcre
+    get_source $name
+    download_wrapper $source_addr
     tar xjf pcre-8.42.tar.bz2
     cd pcre-8.42
     ./configure --prefix=$local/$name
@@ -232,7 +214,7 @@ function install_pcre() {
 }
 
 function install_pkg() {
-    name="pkg"
+    name="pkg-config-0.29.2"
     is_installed "$local/$name"
     if [ $? -eq 0 ]
     then
@@ -240,7 +222,8 @@ function install_pkg() {
     fi
     cd && cd software
     rm pkg-config-0.29.2.tar.gz
-    download_wrapper $pkg
+    get_source $name
+    download_wrapper $source_addr
     tar xf pkg-config-0.29.2.tar.gz
     cd pkg-config-0.29.2
     ./configure --prefix=$local/$name --with-internal-glib=$local/glibc
@@ -295,7 +278,7 @@ function install_ag() {
 }
 
 function install_m4() {
-    name="m4"
+    name='m4-1.4.9'
     is_installed "$local/$name"
     if [ $? -eq 0 ]
     then
@@ -303,7 +286,8 @@ function install_m4() {
     fi
     cd && cd software
     rm m4-1.4.9.tar.gz
-    download_wrapper $m4
+    get_source $name
+    download_wrapper $source_addr
     check_ret "download" "m4" $? 
     tar xf m4-1.4.9.tar.gz
     cd ~/software/m4-1.4.9
@@ -313,17 +297,18 @@ function install_m4() {
 }
 
 function install_autoconf() {
-    name="autoconf"
+    name='autoconf-2.69'
     is_installed "$local/$name"
     if [ $? -eq 0 ]
     then
         return
     fi
     cd && cd software
-    rm autoconf-latest.tar.gz
-    download_wrapper $autoconf
+    rm autoconf-2.69.tar.gz
+    get_source $name
+    download_wrapper $source_addr
     check_ret "download" "autoconf" $? 
-    tar xf autoconf-latest.tar.gz
+    tar xf autoconf-2.69.tar.gz
     cd autoconf-2.69
     ./configure --prefix=$local/$name
     make && make install
@@ -331,7 +316,7 @@ function install_autoconf() {
 }
 
 function install_automake() {
-    name="automake"
+    name='automake-1.16.2'
     is_installed "$local/$name"
     if [ $? -eq 0 ]
     then
@@ -339,7 +324,8 @@ function install_automake() {
     fi
     cd && cd software
     rm automake-1.16.2.tar.gz
-    download_wrapper $automake
+    get_source $name
+    download_wrapper $source_addr
     check_ret "download" "automke" $? 
     tar xf automake-1.16.2.tar.gz
     cd automake-1.16.2
@@ -357,28 +343,36 @@ function install_gcc74() {
     fi
     cd && cd software
     rm gcc-7.4.0.tar.xz
-    rm gmp-6.1.0.tar.bz2
-    rm isl-0.16.1.tar.bz2
-    rm mpc-1.0.3.tar.gz
-    rm mpfr-3.1.4.tar.bz2
     rm gcc-7.4.0.tar
     rm gcc-7.4.0
-
-    download_wrapper $gcc74
-    download_wrapper $mpfr
-    download_wrapper $mpc
-    download_wrapper $isl
-    download_wrapper $gmp
-
+    get_source $name
+    download_wrapper $source_addr
     xz -d gcc-7.4.0.tar.xz
     tar xf gcc-7.4.0.tar
+
+
+    rm gmp-6.1.0.tar.bz2
+    get_source $name
+    download_wrapper $source_addr
     tar xjf gmp-6.1.0.tar.bz2
-    tar xjf isl-0.16.1.tar.bz2
-    tar xzf mpc-1.0.3.tar.gz
-    tar xjf mpfr-3.1.4.tar.bz2
     mv gmp-6.1.0 gcc-7.4.0/gmp
+
+    rm isl-0.16.1.tar.bz2
+    get_source $name
+    download_wrapper $source_addr
+    tar xjf isl-0.16.1.tar.bz2
     mv isl-0.16.1 gcc-7.4.0/isl
+
+    rm mpc-1.0.3.tar.gz
+    get_source $name
+    download_wrapper $source_addr
+    tar xzf mpc-1.0.3.tar.gz
     mv mpc-1.0.3 gcc-7.4.0/mpc
+
+    rm mpfr-3.1.4.tar.bz2
+    get_source $name
+    download_wrapper $source_addr
+    tar xjf mpfr-3.1.4.tar.bz2
     mv mpfr-3.1.4 gcc-7.4.0/mpfr
 
     cd gcc-7.4.0
@@ -399,7 +393,8 @@ function install_glibc() {
 
     cd && cd software
     rm glibc-2.19.tar.bz2
-    download_wrapper $glibc
+    get_source $name
+    download_wrapper $source_addr
     tar xjf glibc-2.19.tar.bz2
     cd glibc-2.19
     mkdir build
@@ -418,7 +413,8 @@ function install_make() {
     fi
     cd && cd software
     rm make-4.3.tar.gz
-    download_wrapper $make
+    get_source $name
+    download_wrapper $source_addr
     tar xzf make-4.3.tar.gz
     cd make-4.3
     ./configure --prefix=$local/$name
@@ -435,7 +431,8 @@ function install_bison() {
     fi
     cd && cd software
     rm bison-3.6.tar.xz
-    download_wrapper $bison
+    get_source $name
+    download_wrapper $source_addr
     xz -d bison-3.6.tar.xz
     tar xf bison-3.6.tar
     cd bison-3.6
@@ -452,7 +449,8 @@ function install_libtool() {
     fi
     cd && cd software
     rm libtool-2.4.6.tar.gz
-    download_wrapper $libtool
+    get_source $name
+    download_wrapper $source_addr
     tar xf libtool-2.4.6.tar.gz
     cd libtool-2.4.6
     sh autogen.sh
