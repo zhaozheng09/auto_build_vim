@@ -272,19 +272,16 @@ function install_ag() {
         return
     fi
 
-    #install_m4
-    #install_autoconf
-    #install_automake
-    cd && cd software
+    install_m4
+    install_autoconf
+    install_automake
     install_pcre
-    cd && cd software
     install_lzma
     cd && cd software
-    #install_pkg
     export PKG_CONFIG_PATH=$local/pcre/lib/pkgconfig/:$PKG_CONFIG_PATH
     export PKG_CONFIG_PATH=$local/lzma/lib/pkgconfig/:$PKG_CONFIG_PATH
-    #rm -rf the_silver_searcher
-    #git clone https://github.com/ggreer/the_silver_searcher.git
+    rm -rf the_silver_searcher
+    git clone https://github.com/ggreer/the_silver_searcher.git
     cd the_silver_searcher
     #sed -e 15a\\"AC_SEARCH_OPTS=\"-I $local/pkg/share/aclocal\"" autogen.sh > test.txt
     #cp -rf test.txt autogen.sh
