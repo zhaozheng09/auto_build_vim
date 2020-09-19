@@ -48,6 +48,7 @@ function download_wrapper() {
     filename=$(auto_get_download_name $1)
 
     function real_download() {
+        echo "start download $1"
         wget $1
         ret=$?
         echo "download return val: $ret"
@@ -56,35 +57,11 @@ function download_wrapper() {
 
     for i in {1..10}
     do
-        real_download $1 &
-        id=$!
-        for i in {1..600}
-        do
-            sleep 1
-            download_fin=$(cat /dev/shm/foo)
-            echo "current download $i, max 600..."
-            if [ $download_fin -eq 0 ]
-            then
-                echo "download $1 ok ."
-                download_fin=1
-                return 0
-            elif [ $download_fin -ne 1 ]
-            then
-                echo "download error ."
-                download_fin=1
-                return 1
-            fi
-            if [ $unexpected_quit -eq 1 ]
-            then
-                kill -9 $id
-                rm $filename
-                echo "unexpected quit ."
-                return 1
-            fi
-        done
-        echo "download timeout,retry $i."
-        kill -9 $!
-        rm $filename
+        real_download $1
+        if [ $? -eq 0 ]
+        then
+            return 0
+        fi
     done
 }
 
@@ -492,11 +469,11 @@ then
     #install_python
 fi
 
-install_m4
-install_autoconf
-install_automake
-install_pcre
-#install_pkg
+#install_m4
+#install_autoconf
+#install_automake
+#install_pcre
+install_pkg
 
 
 #install_ag
