@@ -117,12 +117,12 @@ software="$home/software"
 local="$home/local"
 
 function init() {
-    yum install xz
     rm /usr/bin/python
     ln -s /usr/bin/python2.6 /usr/bin/python
     cd
     mkdir software
     mkdir local
+    yum install xz
 }
 #------ install python
 function install_python() {
@@ -492,14 +492,14 @@ then
     #install_python
 fi
 
-#install_m4
-#install_autoconf
-#install_automake
-#install_pcre
+install_m4
+install_autoconf
+install_automake
+install_pcre
 #install_pkg
 
 
-install_ag
+#install_ag
 #install_python
 #install_automake
 #install_lzma
