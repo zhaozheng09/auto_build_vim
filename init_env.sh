@@ -275,19 +275,24 @@ function install_ag() {
     #install_m4
     #install_autoconf
     #install_automake
-    #install_pcre
+    cd && cd software
+    install_pcre
+    cd && cd software
+    install_lzma
+    cd && cd software
     #install_pkg
     export PKG_CONFIG_PATH=$local/pcre/lib/pkgconfig/:$PKG_CONFIG_PATH
     export PKG_CONFIG_PATH=$local/lzma/lib/pkgconfig/:$PKG_CONFIG_PATH
-    cd && cd software
-    install_lzma
-    rm -rf the_silver_searcher
-    cd && cd software
-    git clone https://github.com/ggreer/the_silver_searcher.git
+    #rm -rf the_silver_searcher
+    #git clone https://github.com/ggreer/the_silver_searcher.git
     cd the_silver_searcher
-    sed -e 15a\\"AC_SEARCH_OPTS=\"-I $local/pkg/share/aclocal\"" autogen.sh > test.txt
-    cp -rf test.txt autogen.sh
+    #sed -e 15a\\"AC_SEARCH_OPTS=\"-I $local/pkg/share/aclocal\"" autogen.sh > test.txt
+    #cp -rf test.txt autogen.sh
     sh autogen.sh
+    cp /usr/share/aclocal/pkg.m4 m4/ 
+    autoreconf -i -f
+    aclocal -I m4
+    autoconf
     ./configure --prefix=$local/$name
     make && make install
 }
@@ -473,10 +478,10 @@ fi
 #install_autoconf
 #install_automake
 #install_pcre
-install_pkg
+#install_pkg
 
 
-#install_ag
+install_ag
 #install_python
 #install_automake
 #install_lzma
