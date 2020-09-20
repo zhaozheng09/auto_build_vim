@@ -26,6 +26,9 @@ m4='m4-1.4.9'
 pcre='pcre-8.42'
 ag='ag'
 glibc='glibc-2.19'
+lzma='lzma'
+export pcre="$pcre"
+export lzma="$lzma" 
 
 export PATH="$lc/$python/bin:$PATH"
 export LD_LIBRARY_PATH="$lc/$python/lib64:$lc/$python/lib:$LD_LIBRARY_PATH"

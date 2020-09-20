@@ -1,8 +1,3 @@
-function init_source() 
-{
-    export config_path=`pwd` 
-}
-
 function get_source() 
 {
   # 0->last, priority low->high
