@@ -457,6 +457,8 @@ function install_libtool() {
     make && make install
 }
 
+init_source
+
 if [ "$1" == "init" ]
 then
     init

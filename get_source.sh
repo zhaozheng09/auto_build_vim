@@ -1,7 +1,12 @@
+function init_source() 
+{
+    export config_path=`pwd` 
+}
+
 function get_source() 
 {
   # 0->last, priority low->high
-  config_file=('third_dependences.conf' 'mt_dependences.conf')
+  config_file=("$config_path/third_dependences.conf" "$config_path/mt_dependences.conf")
   
   function filter() 
   {
@@ -19,3 +24,4 @@ function get_source()
   done
   export source_addr=$ret
 }
+
