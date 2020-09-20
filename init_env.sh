@@ -124,11 +124,11 @@ function install_vim() {
     yum install -y bzip2
     check_ret "download" $name $?
 
+    name="vim-8.2"
     cd && cd software
     rm vim-8.2.tar.bz2
     get_source $name
     download_wrapper $source_addr
-    name="vim-8.2"
     check_ret "download" $name $?
     tar xf vim-8.2.tar.bz2
     cd vim82
