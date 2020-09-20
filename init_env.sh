@@ -350,27 +350,26 @@ function install_gcc74() {
     xz -d gcc-7.4.0.tar.xz
     tar xf gcc-7.4.0.tar
 
-
     rm gmp-6.1.0.tar.bz2
-    get_source $name
+    get_source 'gmp-6.1.0' 
     download_wrapper $source_addr
     tar xjf gmp-6.1.0.tar.bz2
     mv gmp-6.1.0 gcc-7.4.0/gmp
 
     rm isl-0.16.1.tar.bz2
-    get_source $name
+    get_source 'isl-0.16.1'
     download_wrapper $source_addr
     tar xjf isl-0.16.1.tar.bz2
     mv isl-0.16.1 gcc-7.4.0/isl
 
     rm mpc-1.0.3.tar.gz
-    get_source $name
+    get_source 'mpc-1.0.3'
     download_wrapper $source_addr
     tar xzf mpc-1.0.3.tar.gz
     mv mpc-1.0.3 gcc-7.4.0/mpc
 
     rm mpfr-3.1.4.tar.bz2
-    get_source $name
+    get_source 'mpfr-3.1.4'
     download_wrapper $source_addr
     tar xjf mpfr-3.1.4.tar.bz2
     mv mpfr-3.1.4 gcc-7.4.0/mpfr
@@ -384,7 +383,7 @@ function install_gcc74() {
 }
 
 function install_glibc() {
-    name="glibc"
+    name='glibc-2.19'
     is_installed "$local/$name"
     if [ $? -eq 0 ]
     then
@@ -405,7 +404,7 @@ function install_glibc() {
 }
 
 function install_make() {
-    name="make"
+    name='make-4.3'
     is_installed "$local/$name"
     if [ $? -eq 0 ]
     then
@@ -423,7 +422,7 @@ function install_make() {
 }
 
 function install_bison() {
-    name="bison"
+    name='bison-3.6'
     is_installed "$local/$name"
     if [ $? -eq 0 ]
     then
@@ -441,7 +440,7 @@ function install_bison() {
 }
 
 function install_libtool() {
-    name="libtool"
+    name='libtool-2.4.6'
     is_installed "$local/$name"
     if [ $? -eq 0 ]
     then
@@ -466,7 +465,6 @@ then
     install_a_vim
     install_vimrc
     install_ag
-    #install_python
 fi
 
 #install_m4
