@@ -75,6 +75,37 @@ function init() {
     mkdir local
     yum install xz
 }
+
+function install_openssl() {
+    name="openssl-1.0.2"
+    openssl_local="$local/$name"
+    is_installed $openssl_local
+    if [ $? -eq 0 ]
+    then    
+        return 0
+    fi
+
+    cd && cd software
+    rm openssl-1.0.2.tar.gz 
+    get_source $name
+    download_wrapper $source_addr
+    check_ret "download" $name $?
+
+    tar xzf openssl-1.0.2.tar.gz 
+    cd $name
+    mkdir $openssl_local
+    ./config --prefix=$openssl_local -fPIC
+    check_ret "config" $name $?
+    make -j 32 && make depend && make install
+    check_ret "make" $name $?
+
+    bin="$openssl_local/bin"
+    lib="$openssl_local/lib64:$openssl_local/lib"
+
+    export PATH="$bin:$PATH"
+    export LD_LIBRARY_PATH="$lib:$LD_LIBRARY_PATH"
+}
+
 #------ install python
 function install_python() {
     name="Python-3.8.3"
@@ -84,6 +115,12 @@ function install_python() {
     then    
         return 0
     fi
+
+    export PKG_CONFIG_PATH=$local/openssl-1.0.2/lib/pkgconfig/:$PKG_CONFIG_PATH
+    install_openssl
+    yum -y install gcc gcc-c++ zlib zlib-devel libffi-devel
+    yum -y install gcc kernel-devel kenel-headers make bzip2
+    yum -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel
 
     cd && cd software
     rm Python-3.8.3.tgz
@@ -458,8 +495,6 @@ function install_libtool() {
     make && make install
 }
 
-init_source
-
 if [ "$1" == "init" ]
 then
     init
@@ -470,7 +505,8 @@ then
     install_ag
 fi
 
-install_ag
+#install_lzma
+#install_ag
 #install_m4
 #install_autoconf
 #install_automake
