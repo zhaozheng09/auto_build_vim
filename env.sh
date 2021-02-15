@@ -51,16 +51,16 @@ export PATH="$lc/$bison/bin:$PATH"
 export LD_LIBRARY_PATH="$lc/$bison/lib:$LD_LIBRARY_PATH"
 
 export LD_LIBRARY_PATH="$lc/$pcre/lib:$LD_LIBRARY_PATH"
-export LD_LIBRARY_PATH="$lc/$lzma/lib:$LD_LIBRARY_PATH"
+#export LD_LIBRARY_PATH="$lc/$lzma/lib:$LD_LIBRARY_PATH"
 export PATH="$lc/$pcre/bin:$PATH"
 export PATH="$lc/$ag/bin:$PATH"
 
 export PATH="$lc/$openssl/bin:$PATH"
 export LD_LIBRARY_PATH="$lc/$openssl/lib:$LD_LIBRARY_PATH"
 
-export PKG_CONFIG_PATH=$local/$pcre/lib/pkgconfig/:$PKG_CONFIG_PATH
-export PKG_CONFIG_PATH=$local/$lzma/lib/pkgconfig/:$PKG_CONFIG_PATH
-export PKG_CONFIG_PATH=$local/$openssl/lib/pkgconfig/:$PKG_CONFIG_PATH
+#export PKG_CONFIG_PATH=$local/$pcre/lib/pkgconfig/:$PKG_CONFIG_PATH
+#export PKG_CONFIG_PATH=$local/$lzma/lib/pkgconfig/:$PKG_CONFIG_PATH
+#export PKG_CONFIG_PATH=$local/$openssl/lib/pkgconfig/:$PKG_CONFIG_PATH
 
 #export PATH="$lc/glibc/bin:$lc/glibc/libexec:$PATH"
 #export PATH="$lc/glibc/bin:$PATH"

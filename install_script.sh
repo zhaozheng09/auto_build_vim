@@ -57,7 +57,7 @@ function check_ret() {
     if [ $3 -ne 0 ]
     then
         echo "------------------------"
-        echo "$1 $2 failed ."
+        echo "$1 $2 failed, ret:$3"
         echo "------------------------"
         exit
     fi
@@ -68,12 +68,14 @@ software="$home/software"
 local="$home/local"
 
 function init() {
-    rm /usr/bin/python
-    ln -s /usr/bin/python2.6 /usr/bin/python
+    #rm /usr/bin/python
+    #ln -s /usr/bin/python2.6 /usr/bin/python
     cd
     mkdir software
     mkdir local
     yum install xz
+    yum install perl
+    yum install perl-Thread-Queue
 }
 
 function install_openssl() {
@@ -86,6 +88,7 @@ function install_openssl() {
     fi
 
     cd && cd software
+    echo "================================ rm "
     rm openssl-1.0.2.tar.gz 
     get_source $name
     download_wrapper $source_addr
@@ -96,8 +99,14 @@ function install_openssl() {
     mkdir $openssl_local
     ./config --prefix=$openssl_local -fPIC
     check_ret "config" $name $?
-    make -j 32 && make depend && make install
-    check_ret "make" $name $?
+    make -j 32 
+    make -j 32 
+    # test error .
+    #check_ret "make" $name $?
+    make depend
+    check_ret "depend" $name $?
+    make install
+    check_ret "install" $name $?
 
     bin="$openssl_local/bin"
     lib="$openssl_local/lib64:$openssl_local/lib"
@@ -117,7 +126,6 @@ function install_python() {
     fi
 
     export PKG_CONFIG_PATH=$local/openssl-1.0.2/lib/pkgconfig/:$PKG_CONFIG_PATH
-    install_openssl
     yum -y install gcc gcc-c++ zlib zlib-devel libffi-devel
     yum -y install gcc kernel-devel kenel-headers make bzip2
     yum -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel
@@ -131,7 +139,8 @@ function install_python() {
     tar xzf Python-3.8.3.tgz
     cd Python-3.8.3
     mkdir $python_local
-    ./configure --prefix=$python_local --enable-shared --enable-optimizations
+    #./configure --prefix=$python_local --enable-shared --enable-optimizations
+    ./configure --prefix=$python_local --enable-shared
     check_ret "config" $name $?
     make -j 32
     check_ret "make" $name $?
@@ -368,6 +377,7 @@ function install_automake() {
     tar xf automake-1.16.2.tar.gz
     cd automake-1.16.2
     ./configure --prefix=$local/$name
+    sed -i 's/$(update_mans) automake-$(APIVERSION)/$(update_mans) automake-$(APIVERSION) --no-discard-stderr/g' Makefile
     make && make install
     export PATH=$local/automake:$PATH
 }
@@ -498,26 +508,13 @@ function install_libtool() {
 if [ "$1" == "init" ]
 then
     init
+    install_openssl
     install_python
     install_vim
     install_a_vim
     install_vimrc
     install_ag
 fi
-
-#install_lzma
-#install_ag
-#install_m4
-#install_autoconf
 #install_automake
-#install_pcre
-#install_pkg
-
-
-#install_python
-#install_automake
-#install_lzma
-#install_glibc
-#install_glibc
-#install_gcc74
+install_ag
 
