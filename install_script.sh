@@ -217,7 +217,37 @@ function install_ycm() {
     get_source $name
     download_wrapper $source_addr
     mv ycm_extra_conf.py .ycm_extra_conf.py
+}
 
+# -------- install ycm
+function install_cached_ycm() {
+    name='ycm_config'
+    wget https://s3plus.sankuai.com/v1/mss_f98ae29a284a4de8952b082c29b58dfb/zhaozheng09/custom/YouCompleteMe.tar.gz
+    tar xzf YouCompleteMe.tar.gz
+    mv YouCompleteMe ~/.vim/bundle/YouCompleteMe
+    cd ~/.vim/bundle/YouCompleteMe
+    
+    mv $HOME/.vimrc $HOME/.vimrc_bak
+
+    echo "set encoding=utf-8" > $HOME/.vimrc
+    echo "set rtp+=~/.vim/bundle/Vundle.vim" >> $HOME/.vimrc
+    echo "call vundle#begin()"              >> $HOME/.vimrc
+    echo "Plugin 'VundleVim/Vundle.vim'" >> $HOME/.vimrc
+    echo "Plugin 'Valloric/YouCompleteMe'" >> $HOME/.vimrc
+    echo "call vundle#end()" >> $HOME/.vimrc
+
+    echo "vim +BundleInstall +qall" | bash
+
+    cd ~/.vim/bundle/YouCompleteMe
+    python3 install.py --clang-completer
+
+
+    mv $HOME/.vimrc_bak $HOME/.vimrc
+
+    cd
+    get_source $name
+    download_wrapper $source_addr
+    mv ycm_extra_conf.py .ycm_extra_conf.py
 }
 
 #----------- install color
@@ -427,7 +457,47 @@ function install_gcc74() {
     cd build
     ../configure --prefix=$local/$name -disable-multilib
     make -j 48 && make install
+}
 
+function install_gcc102() {
+    name="gcc-10.2.0"
+    is_installed "$local/$name"
+    if [ $? -eq 0 ]
+    then
+        return
+    fi
+    cd && cd software
+    rm gcc-10.2.0.tar.xz
+    rm gcc-10.2.0.tar
+    rm gcc-10.2.0
+    get_source $name
+    download_wrapper $source_addr
+    xz -d gcc-10.2.0.tar.xz
+    tar xf gcc-10.2.0.tar
+
+    rm gmp-6.1.0.tar.bz2
+    get_source 'gmp-6.1.0' 
+    download_wrapper $source_addr
+    tar xjf gmp-6.1.0.tar.bz2
+    mv gmp-6.1.0 gcc-10.2.0/gmp
+
+    rm mpc-1.0.3.tar.gz
+    get_source 'mpc-1.0.3'
+    download_wrapper $source_addr
+    tar xzf mpc-1.0.3.tar.gz
+    mv mpc-1.0.3 gcc-10.2.0/mpc
+
+    rm mpfr-3.1.4.tar.bz2
+    get_source 'mpfr-3.1.4'
+    download_wrapper $source_addr
+    tar xjf mpfr-3.1.4.tar.bz2
+    mv mpfr-3.1.4 gcc-10.2.0/mpfr
+
+    cd gcc-10.2.0
+    mkdir build
+    cd build
+    ../configure --prefix=$local/$name -disable-multilib
+    make -j 48 && make install
 }
 
 function install_glibc() {
@@ -515,6 +585,4 @@ then
     install_vimrc
     install_ag
 fi
-#install_automake
-install_ag
-
+install_cached_ycm
